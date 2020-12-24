@@ -166,6 +166,7 @@ FILE		*http_request_body(struct url *, const char *,
 		     const char *, const char *);
 FILE		*ftp_request(struct url *, const char *,
 		     struct url_stat *, struct url *, const char *);
+struct url	*ftp_get_proxy(struct url *, const char *);
 
 /*
  * Check whether a particular flag is set
