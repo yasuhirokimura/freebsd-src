@@ -1994,6 +1994,15 @@ http_request_body(struct url *URL, const char *op, struct url_stat *us,
 		if (url != URL)
 			fetchFreeURL(url);
 		url = new;
+		if (!direct) {
+			if (purl)
+				fetchFreeURL(purl);
+			if (strcmp(url->scheme, SCHEME_FTP) == 0)
+				purl = ftp_get_proxy(url, flags);
+			else if (strcmp(url->scheme, SCHEME_HTTP) == 0
+				|| strcmp(url->scheme, SCHEME_HTTPS) == 0)
+				purl = http_get_proxy(url, flags);
+		}
 	} while (++i < n);
 
 	/* we failed, or ran out of retries */
