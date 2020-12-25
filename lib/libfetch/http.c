@@ -1506,15 +1506,29 @@ http_get_proxy(struct url * url, const char *flags)
 		return (NULL);
 	if (fetch_no_proxy_match(url->host))
 		return (NULL);
-	if (((p = getenv("HTTP_PROXY")) || (p = getenv("http_proxy"))) &&
-	    *p && (purl = fetchParseURL(p))) {
-		if (!*purl->scheme)
-			strcpy(purl->scheme, SCHEME_HTTP);
-		if (!purl->port)
-			purl->port = fetch_default_proxy_port(purl->scheme);
-		if (strcmp(purl->scheme, SCHEME_HTTP) == 0)
-			return (purl);
-		fetchFreeURL(purl);
+	if (strcmp(url->scheme, SCHEME_HTTPS) == 0) {
+		if (((p = getenv("HTTPS_PROXY")) || (p = getenv("https_proxy")) ||
+		(p = getenv("HTTP_PROXY")) || (p = getenv("http_proxy"))) &&
+		*p && (purl = fetchParseURL(p))) {
+			if (!*purl->scheme)
+				strcpy(purl->scheme, SCHEME_HTTP);
+			if (!purl->port)
+				purl->port = fetch_default_proxy_port(purl->scheme);
+			if (strcmp(purl->scheme, SCHEME_HTTP) == 0)
+				return (purl);
+			fetchFreeURL(purl);
+		}
+	} else {
+		if (((p = getenv("HTTP_PROXY")) || (p = getenv("http_proxy"))) &&
+		*p && (purl = fetchParseURL(p))) {
+			if (!*purl->scheme)
+				strcpy(purl->scheme, SCHEME_HTTP);
+			if (!purl->port)
+				purl->port = fetch_default_proxy_port(purl->scheme);
+			if (strcmp(purl->scheme, SCHEME_HTTP) == 0)
+				return (purl);
+			fetchFreeURL(purl);
+		}
 	}
 	return (NULL);
 }
