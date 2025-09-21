@@ -62,6 +62,21 @@ NOTE TO PEOPLE WHO THINK THAT FreeBSD 16.x IS SLOW:
 	the top of the source tree, it will now be used instead of
 	/etc/src.conf.
 
+20250910:
+	When user makes clean install of zfs-root system, bsdinstall(8) adds
+	following line to /etc/sysctl.conf
+
+	vfs.zfs.min_auto_ashift=12
+
+	But the tunable is removed with commit ced72fdd69f2. As a result such
+	error message as below is emitted at boot time of zfs-root system.
+
+	sysctl: unknown oid 'vfs.zfs.min_auto_ashift' at line 9
+
+	To fix it user needs to change above line with following one.
+
+	vfs.zfs.vdev.min_auto_ashift=12
+
 20250907:
 	The MANSPLITPKG knob has been turned off by default, so pkgbase builds
 	will no longer generate "-man" subpackages; instead the manpages will
